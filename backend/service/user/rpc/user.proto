@@ -4,5 +4,13 @@ package user;
 
 option go_package = "./user";
 
-// TODO: define messages and UserRpc methods before goctl/protoc generation.
-service UserRpc {}
+message HealthRequest {}
+
+message HealthResponse {
+  string service = 1;
+  string status = 2;
+}
+
+service UserRpc {
+  rpc Health(HealthRequest) returns (HealthResponse);
+}

@@ -2,7 +2,19 @@ syntax = "v1"
 
 info (
 	title: "User API"
-	desc:  "User, contact, and group endpoints"
+	desc:  "User service HTTP API"
 )
 
-// TODO: define request/response types and service routes before goctl generation.
+type HealthResponse {
+	Service string `json:"service"`
+	Status  string `json:"status"`
+}
+
+@server (
+	group:   health
+	timeout: 2s
+)
+service user-api {
+	@handler health
+	get /healthz returns (HealthResponse)
+}
