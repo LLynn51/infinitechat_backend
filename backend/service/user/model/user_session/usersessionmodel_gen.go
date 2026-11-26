@@ -1,0 +1,106 @@
+// Code generated manually to match goctl 1.10.2. DO NOT EDIT.
+// versions:
+//  goctl version: 1.10.2
+
+package user_session
+
+import (
+	"context"
+	"database/sql"
+	"fmt"
+	"strings"
+	"time"
+
+	"github.com/zeromicro/go-zero/core/stores/builder"
+	"github.com/zeromicro/go-zero/core/stores/cache"
+	"github.com/zeromicro/go-zero/core/stores/sqlc"
+	"github.com/zeromicro/go-zero/core/stores/sqlx"
+	"github.com/zeromicro/go-zero/core/stringx"
+)
+
+var (
+	userSessionFieldNames          = builder.RawFieldNames(&UserSession{})
+	userSessionRows                = strings.Join(userSessionFieldNames, ",")
+	userSessionRowsExpectAutoSet   = strings.Join(stringx.Remove(userSessionFieldNames, "`created_time`", "`updated_time`"), ",")
+	userSessionRowsWithPlaceHolder = strings.Join(stringx.Remove(userSessionFieldNames, "`user_id`", "`session_id`", "`created_time`", "`updated_time`"), "=?,") + "=?"
+
+	cacheUserSessionUserIdSessionIdPrefix = "cache:userSession:userId:sessionId:"
+)
+
+type (
+	userSessionModel interface {
+		Insert(ctx context.Context, data *UserSession) (sql.Result, error)
+		FindOne(ctx context.Context, userId int64, sessionId int64) (*UserSession, error)
+		Update(ctx context.Context, data *UserSession) error
+		Delete(ctx context.Context, userId int64, sessionId int64) error
+	}
+
+	defaultUserSessionModel struct {
+		sqlc.CachedConn
+		table string
+	}
+
+	UserSession struct {
+		UserId      int64     `db:"user_id"`      // 用户 id
+		SessionId   int64     `db:"session_id"`   // 会话 id
+		Role        int64     `db:"role"`         // 角色：0 群主，1 管理员，2 普通用户
+		Status      int64     `db:"status"`       // 状态：0 正常，1 删除
+		CreatedTime time.Time `db:"created_time"` // 创建时间
+		UpdatedTime time.Time `db:"updated_time"` // 更新时间
+	}
+)
+
+func newUserSessionModel(conn sqlx.SqlConn, c cache.CacheConf, opts ...cache.Option) *defaultUserSessionModel {
+	return &defaultUserSessionModel{
+		CachedConn: sqlc.NewConn(conn, c, opts...),
+		table:      "`user_session`",
+	}
+}
+
+func (m *defaultUserSessionModel) Delete(ctx context.Context, userId int64, sessionId int64) error {
+	userSessionUserIdSessionIdKey := fmt.Sprintf("%s%v:%v", cacheUserSessionUserIdSessionIdPrefix, userId, sessionId)
+	_, err := m.ExecCtx(ctx, func(ctx context.Context, conn sqlx.SqlConn) (result sql.Result, err error) {
+		query := fmt.Sprintf("delete from %s where `user_id` = ? and `session_id` = ?", m.table)
+		return conn.ExecCtx(ctx, query, userId, sessionId)
+	}, userSessionUserIdSessionIdKey)
+	return err
+}
+
+func (m *defaultUserSessionModel) FindOne(ctx context.Context, userId int64, sessionId int64) (*UserSession, error) {
+	userSessionUserIdSessionIdKey := fmt.Sprintf("%s%v:%v", cacheUserSessionUserIdSessionIdPrefix, userId, sessionId)
+	var resp UserSession
+	err := m.QueryRowCtx(ctx, &resp, userSessionUserIdSessionIdKey, func(ctx context.Context, conn sqlx.SqlConn, v any) error {
+		query := fmt.Sprintf("select %s from %s where `user_id` = ? and `session_id` = ? limit 1", userSessionRows, m.table)
+		return conn.QueryRowCtx(ctx, v, query, userId, sessionId)
+	})
+	switch err {
+	case nil:
+		return &resp, nil
+	case sqlc.ErrNotFound:
+		return nil, ErrNotFound
+	default:
+		return nil, err
+	}
+}
+
+func (m *defaultUserSessionModel) Insert(ctx context.Context, data *UserSession) (sql.Result, error) {
+	userSessionUserIdSessionIdKey := fmt.Sprintf("%s%v:%v", cacheUserSessionUserIdSessionIdPrefix, data.UserId, data.SessionId)
+	ret, err := m.ExecCtx(ctx, func(ctx context.Context, conn sqlx.SqlConn) (result sql.Result, err error) {
+		query := fmt.Sprintf("insert into %s (%s) values (?, ?, ?, ?)", m.table, userSessionRowsExpectAutoSet)
+		return conn.ExecCtx(ctx, query, data.UserId, data.SessionId, data.Role, data.Status)
+	}, userSessionUserIdSessionIdKey)
+	return ret, err
+}
+
+func (m *defaultUserSessionModel) Update(ctx context.Context, data *UserSession) error {
+	userSessionUserIdSessionIdKey := fmt.Sprintf("%s%v:%v", cacheUserSessionUserIdSessionIdPrefix, data.UserId, data.SessionId)
+	_, err := m.ExecCtx(ctx, func(ctx context.Context, conn sqlx.SqlConn) (result sql.Result, err error) {
+		query := fmt.Sprintf("update %s set %s where `user_id` = ? and `session_id` = ?", m.table, userSessionRowsWithPlaceHolder)
+		return conn.ExecCtx(ctx, query, data.Role, data.Status, data.UserId, data.SessionId)
+	}, userSessionUserIdSessionIdKey)
+	return err
+}
+
+func (m *defaultUserSessionModel) tableName() string {
+	return m.table
+}
