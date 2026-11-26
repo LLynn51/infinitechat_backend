@@ -1,0 +1,4 @@
+Name: user.rpc
+ListenOn: 0.0.0.0:8105
+
+# TODO: add etcd registration, MySQL, Redis, cache, and logging configuration.

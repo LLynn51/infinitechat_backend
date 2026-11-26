@@ -1,0 +1,5 @@
+Name: offline-api
+Host: 0.0.0.0
+Port: 8101
+
+# TODO: add MySQL, Redis, etcd, Kafka, Canal, and logging configuration.

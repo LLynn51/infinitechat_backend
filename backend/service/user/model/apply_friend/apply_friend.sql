@@ -1,0 +1,1 @@
+-- TODO: define the MySQL `apply_friend` table before running goctl model.

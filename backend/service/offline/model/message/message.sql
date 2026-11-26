@@ -1,0 +1,1 @@
+-- TODO: define the MySQL `message` table before running goctl model.

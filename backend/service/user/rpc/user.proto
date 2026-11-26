@@ -1,0 +1,8 @@
+syntax = "proto3";
+
+package user;
+
+option go_package = "./user";
+
+// TODO: define messages and UserRpc methods before goctl/protoc generation.
+service UserRpc {}

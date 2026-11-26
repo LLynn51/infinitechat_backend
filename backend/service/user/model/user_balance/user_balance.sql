@@ -1,0 +1,1 @@
+-- TODO: define the MySQL `user_balance` table before running goctl model.

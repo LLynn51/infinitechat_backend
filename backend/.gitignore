@@ -1,0 +1,40 @@
+# Build
+/bin/
+/dist/
+/build/
+*.exe
+*.dll
+*.so
+*.dylib
+
+# Test and coverage
+*.test
+*.out
+coverage.*
+*.prof
+*.pprof
+*.trace
+
+# Go workspace
+go.work
+go.work.sum
+
+# Environment and local configuration
+.env
+.env.*
+!.env.example
+*.local.*
+
+# Logs and temporary files
+*.log
+/tmp/
+*.tmp
+
+# IDE
+.idea/
+.vscode/
+*.iml
+
+# OS
+.DS_Store
+Thumbs.db

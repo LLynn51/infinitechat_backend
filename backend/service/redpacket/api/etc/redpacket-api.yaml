@@ -1,0 +1,5 @@
+Name: redpacket-api
+Host: 0.0.0.0
+Port: 8103
+
+# TODO: add MySQL, Redis, etcd, Kafka, and logging configuration.

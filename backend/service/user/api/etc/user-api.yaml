@@ -1,0 +1,5 @@
+Name: user-api
+Host: 0.0.0.0
+Port: 8104
+
+# TODO: add MySQL, Redis, MinIO, etcd, Kafka, and logging configuration.

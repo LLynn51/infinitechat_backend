@@ -1,0 +1,1 @@
+-- TODO: define the MySQL `system_notification` table before running goctl model.

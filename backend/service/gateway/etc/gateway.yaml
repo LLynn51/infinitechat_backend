@@ -1,0 +1,5 @@
+Name: gateway
+Host: 0.0.0.0
+Port: 10010
+
+# TODO: add etcd discovery, authentication, CORS, and proxy configuration.

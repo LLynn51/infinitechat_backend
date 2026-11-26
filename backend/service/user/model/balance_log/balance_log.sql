@@ -1,0 +1,1 @@
+-- TODO: define the MySQL `balance_log` table before running goctl model.

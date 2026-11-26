@@ -1,0 +1,1 @@
+-- TODO: define the MySQL `red_packet_receive` table before running goctl model.

@@ -1,0 +1,8 @@
+syntax = "v1"
+
+info (
+	title: "Red Packet API"
+	desc:  "Create, claim, inspect, and refund red packets"
+)
+
+// TODO: define request/response types and service routes before goctl generation.

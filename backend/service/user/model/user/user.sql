@@ -1,0 +1,1 @@
+-- TODO: define the MySQL `user` table before running goctl model.
